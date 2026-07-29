@@ -1,0 +1,3 @@
+[submodule "third_party/BHI2xy_SensorAPI"]
+	path = third_party/BHI2xy_SensorAPI
+	url = https://github.com/boschsensortec/BHI2xy_SensorAPI.git
