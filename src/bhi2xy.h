@@ -13,7 +13,7 @@
 #include <memory>
 
 #include "bhy2.h"
-#include "bus/bus_guide.h"
+#include "bus/bus_base.h"
 
 namespace bhi2xy_sensorapi_cpp_bus_driver {
 
@@ -35,7 +35,7 @@ class Bhi2xy final {
    * @param i2c_bus cpp_bus_driver的I2C总线对象
    * @param i2c_address BHI2xy器件的7位I2C地址
    */
-  Bhi2xy(std::shared_ptr<cpp_bus_driver::BusI2cGuide> i2c_bus,
+  Bhi2xy(std::shared_ptr<cpp_bus_driver::I2cBusBase> i2c_bus,
       uint16_t i2c_address);
 
   /**
@@ -186,7 +186,7 @@ class Bhi2xy final {
    */
   bool FailAndRelease(int8_t result);
 
-  std::shared_ptr<cpp_bus_driver::BusI2cGuide> i2c_bus_;  // I2C总线对象
+  std::shared_ptr<cpp_bus_driver::I2cBusBase> i2c_bus_;  // I2C总线对象
   uint16_t i2c_address_ = 0;                              // 器件I2C地址
   struct bhy2_dev device_{};  // Bosch官方API设备上下文
   std::array<uint8_t, kFifoWorkBufferSize> fifo_work_buffer_{};  // FIFO工作区

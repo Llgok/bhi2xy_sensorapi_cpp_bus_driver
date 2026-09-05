@@ -72,7 +72,7 @@ git submodule update --init --recursive
 Then include the unified entry header:
 
 ```cpp
-#include "bhi2xy_sensorapi_cpp_bus_driver_library.h"
+#include "bhi2xy_sensorapi_cpp_bus_driver.h"
 ```
 
 #### Use as Git Submodules
@@ -91,8 +91,8 @@ components.
 ```cpp
 #include <memory>
 
-#include "bhi2xy_sensorapi_cpp_bus_driver_library.h"
-#include "cpp_bus_driver_library.h"
+#include "bhi2xy_sensorapi_cpp_bus_driver.h"
+#include "cpp_bus_driver.h"
 
 auto i2c_bus = std::make_shared<cpp_bus_driver::HardwareI2c1>(
     sda_pin, scl_pin, I2C_NUM_0);

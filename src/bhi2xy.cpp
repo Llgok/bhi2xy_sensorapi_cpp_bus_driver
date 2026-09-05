@@ -12,7 +12,7 @@
 namespace bhi2xy_sensorapi_cpp_bus_driver {
 
 Bhi2xy::Bhi2xy(
-    std::shared_ptr<cpp_bus_driver::BusI2cGuide> i2c_bus, uint16_t i2c_address)
+    std::shared_ptr<cpp_bus_driver::I2cBusBase> i2c_bus, uint16_t i2c_address)
     : i2c_bus_(std::move(i2c_bus)), i2c_address_(i2c_address) {}
 
 Bhi2xy::~Bhi2xy() { Deinit(false); }
@@ -169,7 +169,7 @@ BHY2_INTF_RET_TYPE Bhi2xy::ReadCallback(uint8_t register_address, uint8_t* data,
   if (instance == nullptr || instance->i2c_bus_ == nullptr || data == nullptr) {
     return BHY2_E_NULL_PTR;
   }
-  // BusI2cGuide会组合寄存器地址和读取事务
+  // I2cBusBase会组合寄存器地址和读取事务
   return instance->i2c_bus_->Read(register_address, data, length)
              ? BHY2_INTF_RET_SUCCESS
              : BHY2_E_IO;
@@ -181,7 +181,7 @@ BHY2_INTF_RET_TYPE Bhi2xy::WriteCallback(uint8_t register_address,
   if (instance == nullptr || instance->i2c_bus_ == nullptr || data == nullptr) {
     return BHY2_E_NULL_PTR;
   }
-  // BusI2cGuide会组合寄存器地址和写入数据
+  // I2cBusBase会组合寄存器地址和写入数据
   return instance->i2c_bus_->Write(register_address, data, length)
              ? BHY2_INTF_RET_SUCCESS
              : BHY2_E_IO;
