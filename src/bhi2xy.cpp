@@ -7,6 +7,11 @@
  */
 #include "bhi2xy.h"
 
+#include <array>
+#include <cstring>
+#include <limits>
+#include <memory>
+#include <new>
 #include <utility>
 
 namespace bhi2xy_sensorapi_cpp_bus_driver {
@@ -169,8 +174,7 @@ BHY2_INTF_RET_TYPE Bhi2xy::ReadCallback(uint8_t register_address, uint8_t* data,
   if (instance == nullptr || instance->i2c_bus_ == nullptr || data == nullptr) {
     return BHY2_E_NULL_PTR;
   }
-  // I2cBusBase会组合寄存器地址和读取事务
-  return instance->i2c_bus_->Read(register_address, data, length)
+  return instance->i2c_bus_->WriteRead(&register_address, 1, data, length)
              ? BHY2_INTF_RET_SUCCESS
              : BHY2_E_IO;
 }
@@ -181,8 +185,25 @@ BHY2_INTF_RET_TYPE Bhi2xy::WriteCallback(uint8_t register_address,
   if (instance == nullptr || instance->i2c_bus_ == nullptr || data == nullptr) {
     return BHY2_E_NULL_PTR;
   }
-  // I2cBusBase会组合寄存器地址和写入数据
-  return instance->i2c_bus_->Write(register_address, data, length)
+  if (length >= std::numeric_limits<size_t>::max()) {
+    return BHY2_E_IO;
+  }
+  const size_t packet_length = static_cast<size_t>(length) + 1;
+  std::array<uint8_t, 128> local_packet{};
+  std::unique_ptr<uint8_t[]> heap_packet;
+  if (packet_length > local_packet.size()) {
+    heap_packet.reset(new (std::nothrow) uint8_t[packet_length]);
+    if (heap_packet == nullptr) {
+      return BHY2_E_IO;
+    }
+  }
+  uint8_t* packet =
+      heap_packet != nullptr ? heap_packet.get() : local_packet.data();
+  packet[0] = register_address;
+  if (length != 0) {
+    std::memcpy(packet + 1, data, length);
+  }
+  return instance->i2c_bus_->Write(packet, packet_length)
              ? BHY2_INTF_RET_SUCCESS
              : BHY2_E_IO;
 }
