@@ -88,7 +88,7 @@ git submodule update --init --recursive
 #include "bhi2xy_sensorapi_cpp_bus_driver.h"
 #include "cpp_bus_driver.h"
 
-auto i2c_bus = std::make_shared<cpp_bus_driver::HardwareI2c1>(
+auto i2c_bus = std::make_shared<cpp_bus_driver::HardwareI2c>(
     sda_pin, scl_pin, I2C_NUM_0);
 
 bhi2xy_sensorapi_cpp_bus_driver::Bhi2xy sensor(i2c_bus, 0x28);
